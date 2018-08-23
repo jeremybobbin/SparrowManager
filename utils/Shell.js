@@ -133,6 +133,6 @@ module.exports = class Shell {
     cd(string) {
         string = string.trim();
         if(string === '../' || string === '..') this.up();
-
+        return this;
     }
 }

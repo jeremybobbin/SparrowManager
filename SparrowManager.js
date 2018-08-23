@@ -1,7 +1,9 @@
 const {get} = require('axios');
 const {exec} = require('child_process');
+const fs = require('fs');
 const Shell = new require('./utils/Shell');
 const shell = new Shell('/');
+const shell1 = new Shell();
 require('dotenv').config();
 
 
@@ -11,6 +13,11 @@ shell.write('pidof', 'node')
         chunks += ' ' + chunk.toString();
     }).exec();
 
+
 function startServer() {
-    console.log('RESTARTING');
+    let log = fs.createWriteStream("log.txt");
+    shell1.cd(process.env.SERVER_DIR)
+        .write('node sparrow')
+        .getOutputStream()
+        .pipe(log);
 }
