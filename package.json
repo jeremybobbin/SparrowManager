@@ -1,0 +1,13 @@
+{
+  "name": "Checker",
+  "version": "1.0.0",
+  "main": "SparrowManager.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dotenv": "^6.0.0"
+  },
+  "scripts": {
+    "start": "node SparrowManager"
+  }
+}
