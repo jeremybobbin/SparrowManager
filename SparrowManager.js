@@ -11,10 +11,16 @@ let chunks = '';
 shell.write('pidof', 'node')
     .onData(chunk => {
         chunks += ' ' + chunk.toString();
-    }).exec();
+    }).exec(sh => {
+        let pIds = chunks.split(' ')
+            .filter(str => str !== '');
+        console.log(pIds);
+        if(pIds.length < 2) startServer(sh);
+    });
 
 
 function startServer() {
+    console.log('Starting up server');
     let log = fs.createWriteStream("log.txt");
     shell1.cd(process.env.SERVER_DIR)
         .write('node sparrow')

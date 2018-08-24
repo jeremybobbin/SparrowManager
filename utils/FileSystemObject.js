@@ -20,7 +20,6 @@ module.exports = class FileSystemObject {
         let parent = this.parent;
         do {
             path.unshift(parent.getName);
-
         } while(parent.hasParent());
         
         return path;
