@@ -21,3 +21,6 @@ function startServer() {
         .getOutputStream()
         .pipe(log);
 }
+
+
+// ssh -p 7822 root@68.66.197.121
