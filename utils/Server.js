@@ -1,3 +1,5 @@
+const cp = require('child_process');
+
 const {fork} = require('child_process');
 const fs = require('fs');
 
@@ -5,39 +7,38 @@ const fs = require('fs');
 module.exports = class Server {
     constructor(dir) {
         this.dir = dir;
-        this.createdAt = new Date().now();
+        this.createdAt = this.now();
         this.startedAt;
         this.failedAt;
-        
-    }
-
-    getStatus() {}
-
-    start() {
-        this.process = fork(this.dir);
         this.init();
     }
 
+    check() {
+        this.process.send('yo');
+    }
+
     init() {
-        const {process} = this;
-        const {stdout, stderr} = process;
-        this.startHandler();
-        process.on('error', () => this.errorHandler());
-        stdout.on('data', chunk => this.dataHandler);
+        this.process = fork(this.dir);
+        this.process.on('uncaughtException', () => this.errorHandler());
+        this.process.on('close', () => this.errorHandler());
+
+        this.interval = setTimeout(() => this.check(), 5000);
+        this.startedAt = this.now()
     }
 
     getId() {
         return this.process.pid;
     }
 
-    startHandler() {
-        this.startedAt = this.now();
+    errorHandler() {
+        console.log('Sparrow has exerienced an Error.');
+        this.failedAt = this.now();
+        this.resetTimer = setTimeout(() => this.init(), 5000);
     }
 
-    errorHandler() {
-        this.failedAt = this.now();
-
-
+    writeTo(dir) {
+        this.log = fs.createWriteStream(dir);
+        setTimeout(() => this.process.on('data', chunk => this.log.write(chunk)), 500);
     }
 
     throw() {
@@ -48,6 +49,6 @@ module.exports = class Server {
 
 
     now() {
-        return new Date().now();
+        return Date.now();
     }
 }
